@@ -59,7 +59,8 @@ case(instr)
     begin
       RegWrite = 'b0; // RegWrite disable on cmp
       ALUOp = 'b0; // subtraction ************ ALU OP ******************
-  
+    end
+    
   // Movf
   'b1010: Movf = 'b1;
       
