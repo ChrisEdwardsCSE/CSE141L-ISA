@@ -44,31 +44,32 @@ module top_level(
 
 // control decoder ****************** FIX
   Control ctl1(.instr(),
-  .RegDst  (), 
-  .Branch  (relj)  , 
-  .MemWrite , 
-  .ALUSrc   , 
-  .RegWrite   ,     
-  .MemtoReg(),
-  .ALUOp());
+               .UncondJump,
+               .RdMem,
+               .WrMem,
+               .JType,
+               .IType,
+               .RegWrite,
+               .Movf,
+               ALUOp);
 
   assign rd_addr = mach_code[4:1];
   assign alu_cmd  = mach_code[8:5];
   assign wr_addr = (Movf) ? rd_addr : acc_reg; // ***** Need to define acc_reg *******
 
-  reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
-              .clk         ,
-              .wr_en   (RegWrite),
-              .rd_addr(rd_addr),
-              .wr_addr (wr_addr),      // in place operation
-              .datA_out(datA),
-              .datB_out(datB)); 
-
-  assign muxB = ALUSrc? immed : datB;
+	reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
+		.wr_en(RegWrite),
+		.rd_addr,
+		.wr_addr,
+		.dat_out, // operand register data
+		.dat_acc_out, // accumulator register data
+		.dat_flag_out, // status register data
+	);
+  assign mux_alu_src = IType? immed : dat_out;
 
   alu alu1(.alu_cmd(),
-         .inA    (datA),
-		 .inB    (muxB),
+         .inA    (dat_out),
+		 .inB    (mux_alu_src),
 		 .sc_i   (sc),   // output from sc register
 		 .rslt       ,
 		 .sc_o   (sc_o), // input to sc register
