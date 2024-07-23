@@ -8,7 +8,7 @@ module top_level(
               prog_ctr;
   wire        RegWrite;
   wire[7:0]   datA,datB,		  // from RegFile
-              muxB, 
+              mux_alu_src, 
 			  rslt,               // alu output
               immed;
   logic sc_in,   				  // shift/carry out from/to ALU
@@ -55,9 +55,10 @@ module top_level(
 
   assign rd_addr = mach_code[4:1];
   assign alu_cmd  = mach_code[8:5];
-  assign wr_addr = (Movf) ? rd_addr : acc_reg; // ***** Need to define acc_reg *******
-
-	reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
+  assign wr_addr = (Movf) ? rd_addr : 0; // decides destination reg between operand reg (for movf) & R0
+  
+	reg_file #(.pw(3)) rf1(
+      	.dat_in(mem_data),	   // loads, most ops
 		.wr_en(RegWrite),
 		.rd_addr,
 		.wr_addr,
@@ -65,7 +66,8 @@ module top_level(
 		.dat_acc_out, // accumulator register data
 		.dat_flag_out, // status register data
 	);
-  assign mux_alu_src = IType? immed : dat_out;
+  
+  assign mux_alu_src = IType? immed : dat_out; // decides ALU 2nd source between immediate value and operand register data
 
   alu alu1(.alu_cmd(),
          .inA    (dat_out),
@@ -75,11 +77,11 @@ module top_level(
 		 .sc_o   (sc_o), // input to sc register
 		 .pari  );  
 
-  dat_mem dm1(.dat_in(datB)  ,  // from reg_file
+  dat_mem dm1(.dat_in(dat_acc_out)  ,  // the write data is in R0
              .clk           ,
 			 .wr_en  (MemWrite), // stores
-			 .addr   (datA),
-             .dat_out());
+              .addr   (dat_out), // address is operand register
+             .mem_data());
 
 // registered flags from ALU
   always_ff @(posedge clk) begin
