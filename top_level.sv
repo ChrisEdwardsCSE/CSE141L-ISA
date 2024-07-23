@@ -42,7 +42,7 @@ module top_level(
   instr_ROM ir1(.prog_ctr,
                .mach_code);
 
-// control decoder
+// control decoder ****************** FIX
   Control ctl1(.instr(),
   .RegDst  (), 
   .Branch  (relj)  , 
@@ -52,16 +52,15 @@ module top_level(
   .MemtoReg(),
   .ALUOp());
 
-  assign rd_addrA = mach_code[2:0];
-  assign rd_addrB = mach_code[5:3];
-  assign alu_cmd  = mach_code[8:6];
+  assign rd_addr = mach_code[4:1];
+  assign alu_cmd  = mach_code[8:5];
+  assign wr_addr = (Movf) ? rd_addr : acc_reg; // ***** Need to define acc_reg *******
 
   reg_file #(.pw(3)) rf1(.dat_in(regfile_dat),	   // loads, most ops
               .clk         ,
               .wr_en   (RegWrite),
-              .rd_addrA(rd_addrA),
-              .rd_addrB(rd_addrB),
-              .wr_addr (rd_addrB),      // in place operation
+              .rd_addr(rd_addr),
+              .wr_addr (wr_addr),      // in place operation
               .datA_out(datA),
               .datB_out(datB)); 
 
