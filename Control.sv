@@ -6,14 +6,14 @@ module Control #(parameter opwidth = 3, mcodebits = 4)(
 );	   // for up to 8 ALU operations
 
 always_comb begin
-  UncdJmp	=   'b0;
-  RdMem		=	'b0;
-  WrMem		= 	'b0;
-  JType		=	'b0;
-  IType		=	'b0;
-  RegWrite	=	'b1;
-  Movf		=	'b0;
-  ALUOp	    =   'b0;
+  UncdJmp	=   'b0; // Unconditional Jump
+  RdMem		=	'b0; // Choose the memory data from mux, only on ld instructions
+  WrMem		= 	'b0; // Write to memory enable, only on str
+  JType		=	'b0; // J-type instruction? Links to AND gate for PC next value
+  IType		=	'b0; // I-type instruction? The SEL for the mux for ALU 2nd source
+  RegWrite	=	'b1; // Write to register enable
+  Movf		=	'b0; // Instruction is movf?
+  ALUOp	    =   'b0; // ALU Operation for alu.sv
   
 case(instr)
   // Unconditional jump
@@ -48,7 +48,7 @@ case(instr)
   'b1101:
     begin
       IType = 'b1;
-      ALUOp = 'b0; // ************ ALU OP ******************
+      ALUOp = 'b001; // ************ ALU OP ******************
     end
     
   // Movi
@@ -58,24 +58,20 @@ case(instr)
   'b1100: 
     begin
       RegWrite = 'b0; // RegWrite disable on cmp
-      ALUOp = 'b0; // subtraction ************ ALU OP ******************
+      ALUOp = 'b111;
     end
-    
   // Movf
   'b1010: Movf = 'b1;
       
-  // ************ ALU OPs ******************
       
   // Add
-  'b0101: ALUOp = 'b0;
+  'b0101: ALUOp = 3'b000;
        
   // Sub
-  'b0111: ALUOp = 'b0;
+  'b0111: ALUOp = 3'b110;
   
   // XOR
-  'b0110: ALUOp = 'b0;
-      
-  // 
+  'b0110: ALUOp = 3'b011;
   
 endcase
 
