@@ -2,41 +2,33 @@
 // sample -- change as desired
 module alu(
   input[2:0] alu_cmd,    // ALU instructions
-  input[7:0] inA, inB,	 // 8-bit wide data path
-  input      sc_i,       // shift_carry in
-  output logic[7:0] rslt,
-  output logic sc_o,     // shift_carry out
-               pari,     // reduction XOR (output)
-			   zero      // NOR (output)
+  input[8:0] inA, inB,	 // 9-bit wide data path
+  output logic[8:0] rslt,
+  output logic flag		 // jump flag
 );
 
 always_comb begin 
-  rslt = 'b0;            
-  sc_o = 'b0;    
-  zero = !rslt;
-  pari = ^rslt;
+  rslt =  'b0;
+  flag =  'b0;               
   case(alu_cmd)
-    3'b000: // add 2 8-bit unsigned; automatically makes carry-out
-      {sc_o,rslt} = inA + inB + sc_i;
-	3'b001: // left_shift
-	  {sc_o,rslt} = {inA, sc_i};
-      /*begin
-		rslt[7:1] = ina[6:0];
-		rslt[0]   = sc_i;
-		sc_o      = ina[7];
-      end*/
-    3'b010: // right shift (alternative syntax -- works like left shift
-	  {rslt,sc_o} = {sc_i,inA};
+    // add, xor, sub, lsl, cmp
+    3'b000: // add 2 9-bit unsigned
+      rslt = inA + inB;
+	  3'b001: // left_shift
+      // operator left shift **CANNOT LEFT SHIFT MORE THAN 9 (length of reg)**
+      flag = rslt[9-inB];
+      rslt = rslt << inB;
     3'b011: // bitwise XOR
-	  rslt = inA ^ inB;
-	3'b100: // bitwise AND (mask)
-	  rslt = inA & inB;
-	3'b101: // left rotate
-	  rslt = {inA[6:0],inA[7]};
-	3'b110: // subtract
-	  {sc_o,rslt} = inA - inB + sc_i;
-	3'b111: // pass A
-	  rslt = inA;
+	    rslt = inA ^ inB;
+	  3'b110: // subtract
+	    rslt = inA - inB;
+      if (inB - inA) > 0 begin
+        flag = 'b1;
+      end
+	  3'b111: // cmp
+      if (inA - inB) == 0 begin
+        flag = 'b1;
+      end
   endcase
 end
    
