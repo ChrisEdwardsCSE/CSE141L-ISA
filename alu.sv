@@ -16,13 +16,9 @@ always_comb begin
     3'b000: // add 2 9-bit unsigned
       rslt = inA + inB;
 	  3'b001: // left_shift
-      for (int i = 0; i < inB; i++) begin
-        flag = rslt[8];
-        rslt[8:1] = {rslt[7:0], 1b'0}
-      end
       // operator left shift **CANNOT LEFT SHIFT MORE THAN 9 (length of reg)**
-      // flag = rslt[9-inB];
-      // rslt = rslt << inB;t
+      flag = rslt[9-inB];
+      rslt = rslt << inB;
     3'b011: // bitwise XOR
 	    rslt = inA ^ inB;
 	  3'b110: // subtract
