@@ -70,10 +70,8 @@ module top_level(
   alu alu1(.alu_cmd(),
          .inA    (datA),
 		 .inB    (muxB),
-		 .sc_i   (sc),   // output from sc register
 		 .rslt       ,
-		 .sc_o   (sc_o), // input to sc register
-		 .pari  );  
+     );  
 
   dat_mem dm1(.dat_in(datB)  ,  // from reg_file
              .clk           ,
