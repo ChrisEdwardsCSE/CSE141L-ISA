@@ -67,7 +67,7 @@ module top_level(
 		.dat_flag_out, // status register data
 	);
   
-  assign mux_alu_src = IType? immed : dat_out; // decides ALU 2nd source between immediate value and operand register data
+  assign mux_alu_src = IType ? immed : dat_out; // decides ALU 2nd source between immediate value and operand register data
 
   alu alu1(.alu_cmd(),
          .inA    (dat_out),
