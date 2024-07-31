@@ -19,6 +19,8 @@ always_comb begin
       // operator left shift **CANNOT LEFT SHIFT MORE THAN 9 (length of reg)**
       flag = rslt[9-inB];
       rslt = rslt << inB;
+    3'b101: // right shift
+      rslt = rslt >> inB;
     3'b011: // bitwise XOR
 	    rslt = inA ^ inB;
 	  3'b110: // subtract
