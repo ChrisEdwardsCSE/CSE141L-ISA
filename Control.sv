@@ -50,6 +50,12 @@ case(instr)
       IType = 'b1;
       ALUOp = 'b001; // ************ ALU OP ******************
     end
+
+  // Rsl
+  'b1111:
+    begin
+      IType = 'b1;
+      ALUOp = 'b101;
     
   // Movi
   'b1110: IType = 'b1;
