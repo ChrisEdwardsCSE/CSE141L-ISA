@@ -1,30 +1,85 @@
 // control decoder
 module Control #(parameter opwidth = 3, mcodebits = 4)(
   input [mcodebits-1:0] instr,    // subset of machine code (any width you need)
-  output logic RegDst, Branch, 
-     MemtoReg, MemWrite, ALUSrc, RegWrite,
-  output logic[opwidth-1:0] ALUOp);	   // for up to 8 ALU operations
+  output logic UncdJmp, RdMem, WrMem, JType, IType, RegWrite, Movf,
+  output logic[opwidth-1:0] ALUOp
+);	   // for up to 8 ALU operations
 
 always_comb begin
-// defaults
-  RegDst 	=   'b0;   // 1: not in place  just leave 0
-  Branch 	=   'b0;   // 1: branch (jump)
-  MemWrite  =	'b0;   // 1: store to memory
-  ALUSrc 	=	'b0;   // 1: immediate  0: second reg file output
-  RegWrite  =	'b1;   // 0: for store or no op  1: most other operations 
-  MemtoReg  =	'b0;   // 1: load -- route memory instead of ALU to reg_file data in
-  ALUOp	    =   'b111; // y = a+0;
-// sample values only -- use what you need
-case(instr)    // override defaults with exceptions
-  'b0000:  begin					// store operation
-               MemWrite = 'b1;      // write to data mem
-               RegWrite = 'b0;      // typically don't also load reg_file
-			 end
-  'b00001:  ALUOp      = 'b000;  // add:  y = a+b
-  'b00010:  begin				  // load
-			   MemtoReg = 'b1;    // 
-             end
-// ...
+  UncdJmp	=   'b0; // Unconditional Jump
+  RdMem		=	'b0; // Choose the memory data from mux, only on ld instructions
+  WrMem		= 	'b0; // Write to memory enable, only on str
+  JType		=	'b0; // J-type instruction? Links to AND gate for PC next value
+  IType		=	'b0; // I-type instruction? The SEL for the mux for ALU 2nd source
+  RegWrite	=	'b1; // Write to register enable
+  Movf		=	'b0; // Instruction is movf?
+  ALUOp	    =   'b0; // ALU Operation for alu.sv
+  
+case(instr)
+  // Unconditional jump
+  'b0000:
+  	begin
+      UncdJmp = 'b1;
+      JType = 'b1;
+      RegWrite = 'b0; // RegWrite disable on jumps
+    end
+  
+  // Jumps
+  'b0001,
+  'b0010,
+  'b0011,
+  'b0100:
+    begin
+      JType = 'b1;
+      RegWrite = 'b0;	// RegWrite disable on jumps
+    end
+  
+  // Ld
+  'b1000: RdMem = 'b1; 	// Read memory only on loads
+  
+  // Str
+  'b0111: 
+    begin
+      WrMem = 'b1;		// Write memory only on stores
+      RegWrite = 'b0;	// RegWrite disable on stores
+    end
+  
+  // Lsl
+  'b1101:
+    begin
+      IType = 'b1;
+      ALUOp = 'b001; // ************ ALU OP ******************
+    end
+
+  // Rsl
+  'b1111:
+    begin
+      IType = 'b1;
+      ALUOp = 'b101;
+    
+  // Movi
+  'b1110: IType = 'b1;
+  
+  // Cmp
+  'b1100: 
+    begin
+      RegWrite = 'b0; // RegWrite disable on cmp
+      ALUOp = 'b111;
+    end
+  
+  // Movf
+  'b1010: Movf = 'b1;
+      
+      
+  // Add
+  'b0101: ALUOp = 3'b000;
+       
+  // Sub
+  'b0111: ALUOp = 3'b110;
+  
+  // XOR
+  'b0110: ALUOp = 3'b011;
+  
 endcase
 
 end
