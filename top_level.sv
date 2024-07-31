@@ -99,5 +99,5 @@ module top_level(
              .mem_data);
 
   assign done = prog_ctr == 128;
- 
+
 endmodule

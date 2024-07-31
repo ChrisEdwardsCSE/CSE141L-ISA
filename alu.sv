@@ -20,6 +20,8 @@ always_comb begin
       	flag = rslt[9-inB];
       	rslt = rslt << inB;
 			end
+    3'b101: // right shift
+      rslt = rslt >> inB;
     3'b011: // bitwise XOR
 	    rslt = inA ^ inB;
 	  3'b110: // subtract
@@ -35,5 +37,4 @@ always_comb begin
       end
   endcase
 end
-   
 endmodule
