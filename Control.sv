@@ -1,7 +1,7 @@
 // control decoder
 module Control #(parameter opwidth = 3, mcodebits = 4)(
   input [mcodebits-1:0] instr,    // subset of machine code (any width you need)
-  output logic UncdJmp, RdMem, WrMem, JType, IType, RegWrite, Movf,
+  output logic UncdJmp, RdMem, WrMem, JType, IType, WrReg, Movf,
   output logic[opwidth-1:0] ALUOp
 );	   // for up to 8 ALU operations
 
@@ -11,7 +11,7 @@ always_comb begin
   WrMem		= 	'b0; // Write to memory enable, only on str
   JType		=	'b0; // J-type instruction? Links to AND gate for PC next value
   IType		=	'b0; // I-type instruction? The SEL for the mux for ALU 2nd source
-  RegWrite	=	'b1; // Write to register enable
+  WrReg	=	'b1; // Write to register enable
   Movf		=	'b0; // Instruction is movf?
   ALUOp	    =   'b0; // ALU Operation for alu.sv
   
@@ -21,7 +21,7 @@ case(instr)
   	begin
       UncdJmp = 'b1;
       JType = 'b1;
-      RegWrite = 'b0; // RegWrite disable on jumps
+      WrReg = 'b0; // RegWrite disable on jumps
     end
   
   // Jumps
@@ -31,7 +31,7 @@ case(instr)
   'b0100:
     begin
       JType = 'b1;
-      RegWrite = 'b0;	// RegWrite disable on jumps
+      WrReg = 'b0;	// RegWrite disable on jumps
     end
   
   // Ld
@@ -41,7 +41,7 @@ case(instr)
   'b0111: 
     begin
       WrMem = 'b1;		// Write memory only on stores
-      RegWrite = 'b0;	// RegWrite disable on stores
+      WrReg = 'b0;	// RegWrite disable on stores
     end
   
   // Lsl
@@ -64,7 +64,7 @@ case(instr)
   // Cmp
   'b1100: 
     begin
-      RegWrite = 'b0; // RegWrite disable on cmp
+      WrReg = 'b0; // RegWrite disable on cmp
       ALUOp = 'b111;
     end
   

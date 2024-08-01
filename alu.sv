@@ -2,8 +2,8 @@
 // sample -- change as desired
 module alu(
   input[2:0] alu_cmd,    // ALU instructions
-  input[8:0] inA, inB,	 // 9-bit wide data path
-  output logic[8:0] rslt,
+  input[7:0] inA, inB,	 // 9-bit wide data path
+  output logic[7:0] rslt,
   output logic flag		 // jump flag
 );
 

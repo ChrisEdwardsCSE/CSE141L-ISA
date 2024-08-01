@@ -13,6 +13,8 @@ module top_level(
 			  rslt,				  // alu output
   			  wr_reg_data;        // Write Data to RegFile       
   wire[4:0]   immed;			  // immediate value
+
+	wire flag;
   
   // PC
   wire  relj;                     // from control to PC; relative jump enable
@@ -38,8 +40,10 @@ module top_level(
 	// Data Memory
 	logic[7:0] mem_data;
   
-  wire[2:0] rd_addr, wr_addr;
+  wire[3:0] rd_addr, wr_addr;
 	logic[3:0] oper_reg;
+
+	wire[4:0] jump_addr;
 
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
@@ -81,6 +85,8 @@ module top_level(
   assign wr_addr = (Movf) ? oper_reg : 0; // decides destination register: between operand reg (for movf) & R0
   
 	reg_file #(.pw(3)) rf1(
+			.clk,
+			.flag,
       .dat_in(wr_reg_data),	   // loads, most ops
       .wr_en(WrReg),
 		.rd_addr(oper_reg), // register read address
@@ -95,10 +101,11 @@ module top_level(
   alu alu1(.alu_cmd(ALUOp),
          .inA    (dat_acc_out),
 		 .inB    (mux_alu_src),
+		 .flag,
 		 .rslt       
      ); 
 
-  dat_mem dm1(.dat_in(dat_acc_out)  ,  // the write data is in R0
+  dat_mem dm(.dat_in(dat_acc_out)  ,  // the write data is in R0
              .clk           ,
 			 .wr_en  (WrMem), // stores
               .addr   (dat_out), // address is operand register
@@ -106,6 +113,6 @@ module top_level(
 
 	assign wr_reg_data = (RdMem) ? mem_data : rslt; // decides between Memory Data (Ld) and ALU Result (all other instructions)
 
-  assign done = prog_ctr == 128;
+  assign done = prog_ctr == 100;
 
 endmodule
