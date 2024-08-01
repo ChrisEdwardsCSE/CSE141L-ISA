@@ -9,7 +9,7 @@ module reg_file #(parameter pw=4)(
               rd_addr,		  // read address pointers
   output logic[7:0] dat_out, // operand register data
   					dat_acc_out, // acc register data
-  output logic		dat_flag_out // status register data (flag)
+  output logic		dat_status_out // status register data (flag)
 );
 
   logic[7:0] core[2**pw];    // 2-dim array  8 wide  16 deep
@@ -17,7 +17,7 @@ module reg_file #(parameter pw=4)(
 // reads are combinational
   assign dat_out = core[rd_addr];  // read operand register
   assign dat_acc_out = core[0];    // read accumulator register
-  assign data_flag_out = core[15]; // read status register
+  assign data_status_out = core[15]; // read status register
 
 // writes are sequential (clocked)
   always_ff @(posedge clk)

@@ -56,7 +56,8 @@ case(instr)
     begin
       IType = 'b1;
       ALUOp = 'b101;
-    
+    end
+
   // Movi
   'b1110: IType = 'b1;
   
