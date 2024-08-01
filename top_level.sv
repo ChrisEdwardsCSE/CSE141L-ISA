@@ -1,6 +1,6 @@
 // sample top level design
 module top_level(
-  input        clk, reset, req, 
+  input        clk, start, 
   output logic done);
   parameter D = 12,             // program counter width
     A = 3;             		  // ALU command bit width
@@ -47,7 +47,7 @@ module top_level(
 
 // fetch subassembly
   PC #(.D(D)) 					  // D sets program counter width
-     pc1 (.reset            ,
+     pc1 (.reset(start)         ,
          .clk              ,
 		 .jump_en,
 		 .target           ,
@@ -113,6 +113,6 @@ module top_level(
 
 	assign wr_reg_data = (RdMem) ? mem_data : rslt; // decides between Memory Data (Ld) and ALU Result (all other instructions)
 
-  assign done = prog_ctr == 100;
+  assign done = (prog_ctr > 1);
 
 endmodule
