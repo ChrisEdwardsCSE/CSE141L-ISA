@@ -5,14 +5,16 @@ module test_bench;
   bit  clk,
        start;// = 'b1;	  JAE 2024-07-24: start=0, then provide delayed start=1 on line 36
   wire done;
+	wire reset = 'b0;
 
   logic[ 4:0] Dist, Min, Max;	// current, min, max Hamming distances
   logic[ 4:0] Min1, Min2;	 	// addresses of pair w/ smallest Hamming distance
   logic[ 4:0] Max1, Max2;		// addresses of pair w/ largest Hamming distance
   logic[15:0] Tmp[32];		    // cache of 16-bit values assembled from data_mem
 
-  DUT D1(.clk  (clk  ),	        // your design goes here
-		 .start(start),
+  top_level D1(.clk  (clk  ),	        // your design goes here
+		 .req(start),
+		 .reset(reset),
 		 .done (done )); 
 
 always begin
