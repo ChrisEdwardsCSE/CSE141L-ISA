@@ -6,7 +6,6 @@ movi #0
 movf r1
 movf r2
 movf r14
-movf r15
 movf r5
 movi #30
 sub r1
@@ -27,6 +26,10 @@ movt r14
 add r15
 ld r0
 movf r7
+movt r14
+add r15
+add r15
+movf r14
 movt r2
 ld r0
 movf r8
@@ -88,7 +91,7 @@ add r15
 movf r1
 jmp #1
 movi #1
-lsl #5
+lsl #5           
 lsl #1
 movf r1
 movt r4
