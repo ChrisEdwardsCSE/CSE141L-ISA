@@ -9,6 +9,7 @@ module alu(
 
 always_comb begin 
   rslt =  'b0;
+	flag = 'b0;
 		begin               
   case(alu_cmd)
     // add, xor, sub, lsl, cmp
@@ -36,16 +37,10 @@ always_comb begin
 					begin
         		flag = 'b1;
 					end
-				else
-					begin
-						flag = 'b0;
-					end
 			end
 	  3'b111: // cmp
       if (inA == inB)
         flag = 'b1;
-			else
-				flag = 'b0;
   endcase
 	end
 end
