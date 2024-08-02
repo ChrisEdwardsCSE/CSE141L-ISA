@@ -3,14 +3,12 @@
 module alu(
   input[2:0] alu_cmd,    // ALU instructions
   input[7:0] inA, inB,	 // 9-bit wide data path
-	input Movto,
   output logic[7:0] rslt,
   output logic flag		 // jump flag
 );
 
 always_comb begin 
   rslt =  'b0;
-  flag =  'b0;
 		begin               
   case(alu_cmd)
     // add, xor, sub, lsl, cmp
@@ -19,7 +17,8 @@ always_comb begin
 	  3'b001: // left_shift
 			begin
       // operator left shift **CANNOT LEFT SHIFT MORE THAN 9 (length of reg)**
-				flag = (inA >> (8-inB));
+				//flag = ((inA >> (8-inB)) & 1'b1)
+				flag = ((inA >> 7) & 'b1);
       	rslt = inA << inB;
 			end
 		3'b100: // Movt, Movi - just pass inB (oper reg or immed) to result
@@ -33,14 +32,20 @@ always_comb begin
 	  3'b110: // subtract
 			begin
 	    	rslt = inA - inB;
-      	if (inB > inA) begin
-        	flag = 'b1;
-      	end
+      	if (inB > inA)
+					begin
+        		flag = 'b1;
+					end
+				else
+					begin
+						flag = 'b0;
+					end
 			end
 	  3'b111: // cmp
-      if ((inA - inB) == 0) begin
+      if (inA == inB)
         flag = 'b1;
-      end
+			else
+				flag = 'b0;
   endcase
 	end
 end

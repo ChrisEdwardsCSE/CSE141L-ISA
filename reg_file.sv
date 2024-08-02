@@ -23,6 +23,7 @@ module reg_file #(parameter pw=4)(
 // writes are sequential (clocked)
   always_ff @(posedge clk)
 		begin
+			core[3] <= flag; // set status register to flags
 			if (start)
 				begin
 					core[3] <= 8'b0;
@@ -30,7 +31,6 @@ module reg_file #(parameter pw=4)(
 	  	if(wr_en)				   // anything but stores or no ops
         	begin
           	core[wr_addr] <= dat_in; // write data to R0 or movf reg
-          	core[3] <= flag; // set status register to flags
         	end
 		end
 endmodule
