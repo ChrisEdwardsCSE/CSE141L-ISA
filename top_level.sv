@@ -17,8 +17,8 @@ module top_level(
 	wire flag;
   
   // PC
-  wire  relj;                     // from control to PC; relative jump enable
 	logic jump_en;
+
   // Control Outputs
   logic UncdJmp,
   		RdMem,
@@ -31,8 +31,8 @@ module top_level(
 	logic[3:0] op_code;
   // Register File
 	logic[7:0] dat_out,
-						 dat_acc_out,
-					   dat_status_out;
+						 dat_acc_out;
+	logic[7:0] dat_status_out;
   
   wire[A-1:0] alu_cmd;
   wire[8:0]   mach_code;          // machine code
@@ -86,6 +86,7 @@ module top_level(
   
 	reg_file #(.pw(3)) rf1(
 			.clk,
+			.start,
 			.flag,
       .dat_in(wr_reg_data),	   // loads, most ops
       .wr_en(WrReg),
@@ -113,6 +114,6 @@ module top_level(
 
 	assign wr_reg_data = (RdMem) ? mem_data : rslt; // decides between Memory Data (Ld) and ALU Result (all other instructions)
 
-  assign done = (prog_ctr > 1);
+  assign done = (prog_ctr == 11);
 
 endmodule

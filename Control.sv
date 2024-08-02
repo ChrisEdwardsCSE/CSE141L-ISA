@@ -38,7 +38,7 @@ case(instr)
   'b1000: RdMem = 'b1; 	// Read memory only on loads
   
   // Str
-  'b0111: 
+  'b1001: 
     begin
       WrMem = 'b1;		// Write memory only on stores
       WrReg = 'b0;	// RegWrite disable on stores
@@ -59,7 +59,14 @@ case(instr)
     end
 
   // Movi
-  'b1110: IType = 'b1;
+  'b1110:
+		begin
+		 	IType = 'b1;
+			ALUOp = 'b100;
+		end
+
+	// Movt
+	'b1011: ALUOp = 'b100;
   
   // Cmp
   'b1100: 
@@ -69,8 +76,11 @@ case(instr)
     end
   
   // Movf
-  'b1010: Movf = 'b1;
-      
+  'b1010: 
+		begin
+			Movf = 'b1;
+			ALUOp = 'b010;
+		end
       
   // Add
   'b0101: ALUOp = 3'b000;
