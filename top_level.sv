@@ -114,6 +114,6 @@ module top_level(
 
 	assign wr_reg_data = (RdMem) ? mem_data : rslt; // decides between Memory Data (Ld) and ALU Result (all other instructions)
 
-  assign done = (prog_ctr == 11);
+  assign done = (prog_ctr == 105);
 
 endmodule

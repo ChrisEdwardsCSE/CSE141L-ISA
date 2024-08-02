@@ -43,9 +43,9 @@ def assemble_instruction(instruction):
     
     if parts[0] in ['movt', 'cmp', 'sub', 'ld', 'str', 'movf', 'add', 'xor']:
         reg = register_map[parts[1]]
-        return f"{opcode}{reg}0"
+        return f"{opcode}0{reg}"
     
-    elif parts[0] in ['lsl', 'rsl', 'movi', 'jeq', 'jnn', 'jmp', 'jc', 'jlt']:
+    elif parts[0] in ['lsl', 'movi', 'jeq', 'jnn', 'jmp', 'jc', 'jlt']:
         immediate = format(int(parts[1][1:]), '05b')
         return f"{opcode}{immediate}"
     

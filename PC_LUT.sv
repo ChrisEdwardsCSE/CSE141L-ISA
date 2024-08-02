@@ -5,23 +5,22 @@ module PC_LUT #(parameter D=12)(
   always_comb case(addr)
 		
 			// Program 1
-			0: target = 10;
-			1: target = 16;
-			2: target = 45;
-			3: target = 53;
+			1: target = 9;
+			2: target = 15;
+			3: target = 48;
 			4: target = 56;
-			5: target = 61;
+			5: target = 59;
 			6: target = 64;
-			7: target = 68;
-			8: target = 72;
-			9: target = 74;
-			10: target = 78;
-			11: target = 80;
-			12: target = 85;
-			13: target = 89;
+			7: target = 67;
+			8: target = 71;
+			9: target = 75;
+			10: target = 77;
+			11: target = 81;
+			12: target = 83;
+			13: target = 88;
+			14: target = 92;
 
 			// Program 2
-			14: target = 0;
 			15: target = 0;
 			16: target = 0;
 			17: target = 0;
@@ -37,6 +36,7 @@ module PC_LUT #(parameter D=12)(
 			27: target = 0;
 			28: target = 0;
 			29: target = 0;
+			30: target = 0;
 		
 	default: target = 'b0;  // hold PC  
   endcase
