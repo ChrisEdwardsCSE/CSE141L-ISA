@@ -87,12 +87,14 @@ movt r1
 add r15
 movf r1
 jmp #1
-movi #32
+movi #1
+lsl #5
 lsl #1
 movf r1
 movt r4
 str r1
-movi #32
+movi #1
+lsl #5
 lsl #1
 add	r15
 movf r1
