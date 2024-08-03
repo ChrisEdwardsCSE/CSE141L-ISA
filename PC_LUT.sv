@@ -21,26 +21,27 @@ module PC_LUT #(parameter D=12)(
 			14: target = 96;
 
 			// Program 2
-			15: target = 13;
-			16: target = 16;
-			17: target = 42;
-			18: target = 66;
-			19: target = 51;
-			20: target = 57;
-			21: target = 71;
-			22: target = 74;
-			23: target = 78;
-			24: target = 83;
-			25: target = 87;
-			26: target = 90;
-			27: target = 94;
-			28: target = 99;
-			29: target = 104;
-			30: target = 108;
-			31: target = 112;
-		
+			15: target = 17;
+			16: target = 23;
+			17: target = 46;
+			18: target = 55;
+			19: target = 61;
+			20: target = 70;
+			21: target = 75;
+			22: target = 78;
+			23: target = 82;
+			24: target = 87;
+			25: target = 91;
+			26: target = 94;
+			27: target = 98;
+			28: target = 103;
+			29: target = 108;
+			30: target = 112;
+			31: target = 116;
 	default: target = 'b0;  // hold PC  
   endcase
+
+endmodule
 
 endmodule
 
