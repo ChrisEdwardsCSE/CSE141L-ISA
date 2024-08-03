@@ -6,7 +6,7 @@ module alu(
   output logic[7:0] rslt,
   output logic flag		 // jump flag
 );
-
+logic[8:0] full_rslt;
 always_comb begin 
   rslt =  'b0;
 	flag = 'b0;
@@ -14,7 +14,11 @@ always_comb begin
   case(alu_cmd)
     // add, xor, sub, lsl, cmp
     3'b000: // add 2 9-bit unsigned
-      rslt = inA + inB;
+			begin
+      	rslt = inA + inB;
+				full_rslt = inA + inB;
+				flag = ((full_rslt >> 8) & 'b1);
+			end
 	  3'b001: // left_shift
 			begin
       // operator left shift **CANNOT LEFT SHIFT MORE THAN 9 (length of reg)**
