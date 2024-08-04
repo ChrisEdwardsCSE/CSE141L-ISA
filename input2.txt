@@ -1,0 +1,221 @@
+movi #7
+movf r15
+movi #31
+lsl #3
+add r15
+movf r9  //local minimum
+movf r10
+movi #1
+movf r15        
+movi #0
+movf r1    //i,j,and local maximum  
+movf r2       
+movf r11
+movf r12
+
+//loop condition for i, storing values into r14 and r4
+movi #30
+sub r1
+jlt #31
+movt r1
+add r15
+movf r2
+movt r1
+lsl #1
+movf r13
+ld r13
+movf r14
+movt r13   
+add r15
+movf r13
+ld r13
+movf r4 
+
+//loop condition for j, storing second number to r5,r6
+movi #31
+sub r2
+jlt #30 
+movt r2
+lsl #1
+movf r13
+ld r13
+movf r5 
+movt r13
+add r15
+movf r13
+ld r13
+movf r6 
+
+//checking the signs 
+movt r14
+rsl #7
+cmp r15
+jeq #17 //first number is negative
+movt r5
+rsl #7
+cmp r15
+jeq #19 //diff signs
+jmp #18　//same signs
+movt r5 //first number is negative PC(17):54
+rsl #7
+cmp r15
+jeq #18 //same signs
+jmp #19 //diff signs
+
+//case 1: same signs
+movt r4  //PC(18):59
+sub r6
+jlt #20  //if r4 - r6 is negative
+movf r8
+movt r14
+sub r5
+movf r7
+jmp #21 
+movf r8 // r4 - r6 negative
+movt r14
+sub r15
+sub r5
+movf r7
+movt r7
+rsl #7
+cmp r15
+jeq #23 //change bits
+jmp #25
+
+
+//case2: diff signs
+movt r4 
+sub r6
+jlt #22 // r4 - r6 is negative
+movf r8
+movt r14
+sub r5
+movf r7
+movt r14
+sub r5
+jlt #25 
+jmp #23 
+movf r8 // r4 - r6 negative
+movt r14
+sub r15
+sub r5
+movf r7
+movt r14
+sub r15
+sub r5
+jlt #25
+
+//changing bits
+movi #31
+lsl #1
+add r15
+lsl #1
+add r15
+lsl #1
+add r15
+movf r13
+movt r7 
+xor r13
+movf r7
+movi #31
+lsl #1
+add r15
+lsl #1
+add r15
+lsl #1
+add r15
+movf r13
+movt r8
+xor r13
+add r15
+jc #24 //co
+movf r8
+movt r7
+jmp #25
+movt r7 //co PC24:122
+add r15
+movf r7
+
+//comparing min and max
+movt r7 
+sub r11
+jlt #27 //next compare
+movi #0
+movf r13
+movt r7
+sub r11
+cmp r13
+jeq #26
+movt r7 //updating
+movf r11
+movt r8
+movf r12
+jmp #27 //next compare
+movt r8 // PC26:139
+sub r12
+jlt #27 //next compare
+movt r7
+movf r11
+movt r8
+movf r12
+jmp #27
+
+//next compare
+movt r9
+sub r7
+jlt #29 //finish comparing
+movi #0
+movf r13
+movt r9
+sub r7
+cmp r13
+jeq #28 
+movt r7
+movf r9
+movt r8
+movf r10
+jmp #29
+movt r10 //PC28:159
+sub r8
+jlt #29 //done
+movt r7
+movf r9
+movt r8
+movf r10
+jmp #29 //done
+
+//done comparing, next loop
+movt r2 //PC29:167
+add r15
+movf r2
+jmp #16 
+
+//30
+movt r1
+add r15
+movf r1
+jmp #15 
+
+//31 all finish
+movi #16   
+lsl #2
+add r15
+add r15
+movf r13 
+movt r9
+str r13     
+movt r13
+add r15
+movf r13
+movt r10
+str r13
+movt r13
+add r15
+movf r13
+movt r11
+str r13
+movt r13
+add r15
+movf r13
+movt r12
+str r13
