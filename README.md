@@ -10,3 +10,5 @@ The design was simulated and tested using SystemVerilog in ModelSim.
 
 ### Annotated DataPath
 ![Annotated-Datapath](./assets/Datapath-Annotations.jpg)
+
+https://www.youtube.com/watch?v=AfGSqvyOXYw
